@@ -2,6 +2,7 @@ import React from 'react';
 import ModalLayout from './Modal';
 import { useAuth } from '../../context/global';
 import {useEffect,useState,useRef} from 'react';
+import { toast } from 'react-toastify';
 import  {getGroup} from '../../functions/groups';
 import { db, storage } from "../../firebase";
 import { EmojiHappyIcon, PhotographIcon, XIcon } from "@heroicons/react/outline";
@@ -47,6 +48,33 @@ const sendPost = async () => {
     setLoading(true);
 
   
+  
+
+
+//-----------------------------------------------------//
+
+const desertRef = ref(storage, `groups/${group.text}/image`);
+deleteObject(desertRef)
+    .then(() => {toast.success('Image Deleted')})
+    .catch((error) => {
+        console.log("Uh-oh, an error occurred!");
+        toast.error(error.message);
+    }
+    )
+
+
+
+
+
+//-----------------------------------------------------//
+
+
+
+
+
+
+
+
 
 
     //const imageRef = ref(storage, `groups/${docRef.id}/image`);
@@ -54,7 +82,8 @@ const sendPost = async () => {
     if (selectedFile) {
 
 // delete old image from storage delete object method
-deleteObject(ref(storage, `groups/${groupid_upate}/image`))
+
+//.then(async() => {
 
 
 const imageRef = ref(storage, `groups/${groupid_upate}/image`);
@@ -68,6 +97,14 @@ const imageRef = ref(storage, `groups/${groupid_upate}/image`);
 
         });
       });
+
+   // } )
+
+// --end here
+
+
+
+
     }
 
     setInput("");

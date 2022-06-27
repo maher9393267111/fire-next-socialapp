@@ -69,7 +69,7 @@ await updateDoc(categoryDoc, groupdata);
 
 
 
-// specefic group data
+// specefic group data  single group
 
   export const getGroup = async (groupid) => {
 
@@ -86,5 +86,20 @@ await updateDoc(categoryDoc, groupdata);
     catch (error) {
       toast.error(error.message);
     }
+
+  }
+
+
+
+  // delete a group
+
+  export const deleteGroup = async (groupid) => {
+    console.log('groupid--⚡⚡⚡⚡⚡⚡⚡⚡', groupid);
+
+const groupDoc = doc(db, 'Groups', groupid);
+await deleteDoc(groupDoc);
+
+
+
 
   }

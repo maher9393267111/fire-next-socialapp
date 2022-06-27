@@ -34,7 +34,7 @@ export default function Input() {
     
     });
 
-    const imageRef = ref(storage, `groups/${docRef.id}/image`);
+    const imageRef = ref(storage, `groups/${input}/image`);
 
     if (selectedFile) {
       // Upload image as url to storage then send it to current user's post doc as update
