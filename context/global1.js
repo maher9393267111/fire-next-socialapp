@@ -32,7 +32,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
-import { auth, db } from "../firebase2";
+import { auth, db } from "../firebase";
 
 
 
