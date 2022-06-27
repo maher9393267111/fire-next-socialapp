@@ -153,6 +153,7 @@ const AuthContext = ({ children }) => {
   const value = {
     signUp,
     signIn,
+    logout,
 
     currentuser,
     userinfo,
