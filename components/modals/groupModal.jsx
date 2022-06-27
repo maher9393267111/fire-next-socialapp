@@ -83,7 +83,7 @@ deleteObject(desertRef)
 
 // delete old image from storage delete object method
 
-//.then(async() => {
+
 
 
 const imageRef = ref(storage, `groups/${groupid_upate}/image`);

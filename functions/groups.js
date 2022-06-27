@@ -17,6 +17,7 @@ import {
     deleteDoc,
 } from "firebase/firestore";
 
+
 import {
     getDownloadURL,
     ref,
@@ -25,6 +26,8 @@ import {
     uploadBytes,
     deleteObject,
   } from "firebase/storage";
+
+
 
 
 import { db,storage } from '../firebase'
@@ -93,8 +96,24 @@ await updateDoc(categoryDoc, groupdata);
 
   // delete a group
 
-  export const deleteGroup = async (groupid) => {
+  export const deleteGroup = async (groupdata,groupid) => {
     console.log('groupid--⚡⚡⚡⚡⚡⚡⚡⚡', groupid);
+
+// delete old image from storage
+
+console.log('groupdata- ☢️  ☢️  ☢️ ', groupdata.text);
+
+
+const desertRef = ref(storage, `groups/${groupdata?.text}/image`);
+deleteObject(desertRef)
+    .then(() => {toast.success('Image Deleted')})
+    .catch((error) => {
+        console.log("Uh-oh, an error occurred!");
+        toast.error(error.message);
+    }
+    )
+
+
 
 const groupDoc = doc(db, 'Groups', groupid);
 await deleteDoc(groupDoc);

@@ -29,12 +29,13 @@ const AllGroups = () => {
 
     // delete group
 
-    const handleDeleteGroup = async (groupid) => {
+    const handleDeleteGroup = async (groupdata,groupid) => {
 
 
         await setGroupid_update(groupid);
+       // console.log(' ☢️  fgfgfg  ☢️  ☢️  ☢️ ', groupdata);
 
-        await deleteGroup(groupid);
+       await deleteGroup(groupdata,groupid);
 
     }
 
@@ -95,7 +96,7 @@ const AllGroups = () => {
                                         <div className="mt-4 flex gap-6">
                                             <div><img
 
-                                                onClick={() => handleDeleteGroup(group?.uid)}
+                                                onClick={() => handleDeleteGroup(group,group?.uid)}
                                                 //{()=>deleteGroup(group?.uid)}
                                                 className=" w-8 h-8 rounded-full" src="https://cdn4.iconfinder.com/data/icons/email-2-2/32/Trash-Email-Bin-256.png" alt="" /></div>
 
