@@ -6,12 +6,12 @@ import { getAuth } from 'firebase/auth';
 //import firebase from "firebase/app";
 const firebaseConfig =  initializeApp({
    
-  apiKey: "AIzaSyA764C7WdnjFOiwfh9q9nqstrCqA08gvfU",
-  authDomain: "social-c7db0.firebaseapp.com",
-  projectId: "social-c7db0",
-  storageBucket: "social-c7db0.appspot.com",
-  messagingSenderId: "782857857583",
-  appId: "1:782857857583:web:e080621d0ffb1776d6b4da"
+  apiKey: "AIzaSyC1SM6UMsjp5GgdNsHjEzeRvID8LdmeEY8",
+  authDomain: "next-fire3.firebaseapp.com",
+  projectId: "next-fire3",
+  storageBucket: "next-fire3.appspot.com",
+  messagingSenderId: "351689395813",
+  appId: "1:351689395813:web:c2e4b31c5c410d9ac1808c"
 });
 
 
