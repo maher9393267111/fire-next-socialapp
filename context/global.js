@@ -47,7 +47,7 @@ const AuthContext = ({ children }) => {
  
   const [currentuser, setUser] = useState({});
   const [userinfo, setUserinfo] = useState({});
-
+const [groupid_upate, setGroupid_update] = useState('');
 
 
 
@@ -138,6 +138,30 @@ const AuthContext = ({ children }) => {
 
 
 
+// ----modal
+
+const [isModalVisible, setIsModalVisible] = useState(false);
+
+const showModal = () => {
+  setIsModalVisible(true);
+};
+
+const handleOk = () => {
+  setIsModalVisible(false);
+};
+
+const handleCancel = () => {
+  setIsModalVisible(false);
+};
+
+
+
+
+
+
+// ----modal End
+
+
  
 
 
@@ -158,6 +182,12 @@ const AuthContext = ({ children }) => {
     currentuser,
     userinfo,
    
+    isModalVisible, setIsModalVisible,
+    showModal,
+    handleOk,
+    handleCancel,
+    groupid_upate,
+   setGroupid_update
    
     
   };

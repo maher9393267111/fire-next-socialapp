@@ -38,14 +38,53 @@ import { toast } from "react-toastify";
  export  async function GroupsList() {
     let arr = [];
     const querySnapshot = await getDocs(collection(db, "Groups"));
-    console.group("Dashboard useEffect read firestore data: ");
+  // console.group("Dashboard useEffect read firestore data: ");
 
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
-      arr.push({ id: doc.id, ...doc.data() });
+
+      arr.push({ uid: doc.id, ...doc.data() });
+   //   console.log(doc.id, " => in function page 👉️👉️👉️👉️", doc.data());
+//   console.log( " => in function page 👉️👉️👉️👉️", arr);
     });
 
   
     return arr;
+  }
+
+
+
+
+  // update a category
+
+export const updateGroup = async (groupid, groupdata) => {
+  console.log('groupdata---🚀🚀🚀🚀', groupid,groupdata);
+ 
+  const categoryDoc = doc(db, 'Groups', groupid);
+ 
+await updateDoc(categoryDoc, groupdata);
+
+
+}
+
+
+
+// specefic group data
+
+  export const getGroup = async (groupid) => {
+
+    try {
+
+      const groupDoc = doc(db, 'Groups', groupid);
+      const group = await getDoc(groupDoc);
+      console.log('groupdata---🚀🚀🚀🚀', group.data());
+
+      return group.data();
+
+
+    }
+    catch (error) {
+      toast.error(error.message);
+    }
+
   }
