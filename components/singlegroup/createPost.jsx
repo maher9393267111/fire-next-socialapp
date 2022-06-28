@@ -17,45 +17,46 @@ const CreatePost = ({ groupid,userisingroup }) => {
     const [loading, setLoading] = useState(false);
     const filePickerRef = useRef(null);
 
+
+
+
     const sendPost = async () => {
         if (loading) return;
         setLoading(true);
-
+    
         const docRef = await addDoc(collection(db, "posts"), {
-            userid: userinfo.id,
-            groupid: groupid,
-            posterImg: userinfo.image,
-
-            text: input,
-            // groupImg: image,
-            timestamp: serverTimestamp(),
-            postedby: userinfo.name,
+          userid:userinfo.id ,
+          text: input,
+          userImg: userinfo.image,
+          timestamp: serverTimestamp(),
+          name: userinfo.name,
+        
         });
-
-        const imageRef = ref(storage, `posts/${input}/image`);
-
+    
+        const imageRef = ref(storage, `posts/${docRef.id}/image`);
+    
         if (selectedFile) {
-            // Upload image as url to storage then send it to current user's post doc as update
-            await uploadString(imageRef, selectedFile, "data_url").then(async () => {
-                const downloadURL = await getDownloadURL(imageRef);
-
-                const docRef = updateDoc(doc(db, "posts"), {
-                    userid: userinfo.id,
-                    groupid: groupid,
-                    posterImg: userinfo.image,
-
-                    text: input,
-                    image: downloadURL,
-                    timestamp: serverTimestamp(),
-                    creator: userinfo.name,
-                });
+          // Upload image as url to storage then send it to current user's post doc as update
+          await uploadString(imageRef, selectedFile, "data_url").then(async () => {
+            const downloadURL = await getDownloadURL(imageRef);
+            await updateDoc(doc(db, "posts", docRef.id), {
+              image: downloadURL,
             });
+          });
         }
-
+    
         setInput("");
         setSelectedFile(null);
         setLoading(false);
-    };
+      };
+
+
+
+
+
+
+
+
 
     const addImageToPost = (e) => {
         const reader = new FileReader();
