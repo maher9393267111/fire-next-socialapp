@@ -30,6 +30,7 @@ const CreatePost = ({ groupid,userisingroup }) => {
           userImg: userinfo.image,
           timestamp: serverTimestamp(),
           name: userinfo.name,
+          groupid: groupid,
         
         });
     
