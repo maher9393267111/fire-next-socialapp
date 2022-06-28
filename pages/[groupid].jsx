@@ -109,7 +109,7 @@ const Groupid = ({}) => {
   }, [groupUsers, db]);
 
   return (
-    <div className=" min-h-[122vh]">
+    <div className=" min-h-[122vh] pb-30">
       <div>
         {/* ---image cover--- */}
 
@@ -180,7 +180,7 @@ const Groupid = ({}) => {
 
           {/* ----group info--- */}
 
-          <div className=" col-span-3">
+          <div className=" pb-22 col-span-3">
             <div>
               {/* -header--- */}
 
@@ -208,7 +208,13 @@ const Groupid = ({}) => {
                         {groupUsers?.map((user) => (
 
 <div key ={user?.name} className="">
-    <h1>{user?.name}</h1>
+    <h1> <div className=" flex gap-6">
+        
+        <h1><img className="w-6 h-6" src={user?.image} alt="" /></h1>
+<h1 className="  text-green-700 font-bold">{user?.name}</h1>
+
+        </div>
+         </h1>
 </div>
                         ))}
                     </div>

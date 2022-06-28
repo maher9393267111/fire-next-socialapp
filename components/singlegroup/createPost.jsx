@@ -24,6 +24,7 @@ const CreatePost = ({ groupid,userisingroup }) => {
         const docRef = await addDoc(collection(db, "posts"), {
             userid: userinfo.id,
             groupid: groupid,
+            posterImg: userinfo.image,
 
             text: input,
             // groupImg: image,
@@ -38,9 +39,11 @@ const CreatePost = ({ groupid,userisingroup }) => {
             await uploadString(imageRef, selectedFile, "data_url").then(async () => {
                 const downloadURL = await getDownloadURL(imageRef);
 
-                const docRef = setDoc(doc(db, "posts", input), {
+                const docRef = updateDoc(doc(db, "posts"), {
                     userid: userinfo.id,
                     groupid: groupid,
+                    posterImg: userinfo.image,
+
                     text: input,
                     image: downloadURL,
                     timestamp: serverTimestamp(),

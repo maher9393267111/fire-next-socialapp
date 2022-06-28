@@ -35,7 +35,7 @@ import { createContext } from "react";
 import { auth, db } from "../firebase";
 import { useDispatch } from "react-redux";
 import { setGroupUsers,   setGroupPosts } from "../store/reduxglobal";
-
+import {toast} from 'react-toastify';
 const authContext = createContext();
 
 export const useAuth = () => {
@@ -75,7 +75,13 @@ const AuthContext = ({ children }) => {
   };
 
   const signIn = (email, password) => {
-    return signInWithEmailAndPassword(auth, email, password);
+    return signInWithEmailAndPassword(auth, email, password).then(() => {
+
+      toast.success("Successfully Signed In");
+    })
+    .catch(error => {
+      toast.error(error.message);
+    })
   };
 
   //------- reguister and login
