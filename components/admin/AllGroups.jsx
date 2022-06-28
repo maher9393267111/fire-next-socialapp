@@ -72,7 +72,7 @@ const AllGroups = () => {
                 <div className=" w-[500px] pb-20 mx-auto" >
                     {groups?.map((group) => {
                         return (
-                            <div className=" mt-8 my-18 ml-12 mr-12">
+                            <div key={group?.text} className=" mt-8 my-18 ml-12 mr-12">
                                 <div className="  flex  justify-between gap-2">
                                     {/* ---group image-- */}
 
