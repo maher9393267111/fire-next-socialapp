@@ -4,7 +4,8 @@ import safeJsonStringify from "safe-json-stringify";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import { addUserToGroup } from "../functions/groups";
+
+import { addUserToGroup,delteGroupusers } from "../functions/groups";
 import { setGroupUsers } from "../store/reduxglobal";
 import { useDispatch } from "react-redux";
 import {
@@ -52,6 +53,15 @@ const Groupid = ({ }) => {
         addUserToGroup(groupid, userinfo, group);
     };
 
+const deletegroup = async () => {   
+
+
+  await  delteGroupusers(groupid, userinfo.id,);
+
+}
+
+
+
 
     const [userisingroup, setUserisingroup] = useState(false);
 
@@ -61,9 +71,9 @@ const Groupid = ({ }) => {
         collection(db, "Groups", groupid, "groupUsers"),
         // orderBy("timestamp")
     );
-    const [messages, loading] = useCollectionData(q);
+    const [users, loading] = useCollectionData(q);
 
-    console.log('messages---->', messages);
+    console.log('Users -2-2-2-2---->',users);
     console.log('loading---->', groupid);
 
 
@@ -73,7 +83,7 @@ const Groupid = ({ }) => {
 
 useEffect(() => {
 
-    const check =messages?.filter(message => message.id === userinfo.id);
+    const check =users?.filter(user => user.id === userinfo.id);
 
 if (check?.length > 0) {
 
@@ -90,7 +100,7 @@ else {
 
     console.log('check---->', check);
 
-}, [messages]);
+}, [users]);
 
 
 
@@ -121,7 +131,10 @@ else {
                             />
                         )}
 
-{userisingroup && ('delete from group' ) }
+{userisingroup && (<img
+
+onClick={ deletegroup }
+className=" w-14 h-14 rounded-full" src="https://cdn2.iconfinder.com/data/icons/picons-basic-2/57/basic2-010_exit_logout-128.png" alt="" /> ) }
 
 
                         </div>

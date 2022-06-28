@@ -143,26 +143,26 @@ export const addUserToGroup = async (groupid, userdata, groupdata) => {
 
 // delete user from group if he exists
 
-const delteuserfromgroup = async (groupid, userdata, groupdata) => {
+ export  const delteGroupusers = async (groupid, userid) => {
 
+// elete it from group collection and from users collection
 
+try {
 
-// check if user exists in group
+  const groupDoc = doc(db, "Groups", groupid, "groupUsers", userid);
+  await deleteDoc(groupDoc);
+  const userDoc = doc(db, "Users", userid, "userGroups", groupid);
+  await deleteDoc(userDoc);
+  toast.success("User Deleted and his ggroup is deleted");
+}
 
-  const groupUsers = doc(db, "Groups", groupid, "groupUsers", userdata?.email);
-  const userGroups = doc(db, "Users", userdata.id, "userGroups", groupdata.text);
+  catch (error) {
 
-  const groupUsersData = await getDoc(groupUsers);
-  const userGroupsData = await getDoc(userGroups);
-
-  if (groupUsersData.exists) {
-    await deleteDoc(groupUsers);
+    toast.error(error.message);
   }
 
-  if (userGroupsData.exists) {
-    await deleteDoc(userGroups);
-     //await deleteDoc(doc(db, "Groups", groupid, "groupUsers", userdata?.email));
-  }
+
+
 }
 
 
