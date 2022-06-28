@@ -5,7 +5,7 @@ import safeJsonStringify from "safe-json-stringify";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
+import AllPosts from "../components/singlegroup/groupPosts";
 import { addUserToGroup, delteGroupusers } from "../functions/groups";
 import { setGroupUsers } from "../store/reduxglobal";
 import { useDispatch } from "react-redux";
@@ -57,9 +57,7 @@ const Groupid = ({}) => {
 
 
 
-//const allPosts =[]
 
- // const Posts =  query(collection(db, "posts"), where("groupid", "==", `${groupid}`));
 
  const q = query(collection(db, "posts"), where("groupid", "==", groupid));
  const unsub = onSnapshot(q, (QuerySnapshot) => {
@@ -166,6 +164,18 @@ const Groupid = ({}) => {
             </div>
 
             {/* ---end of create post--- */}
+
+
+
+{/* ----ALL POSTS--- */}
+
+<div>
+
+<AllPosts posts={grouoPosts} />
+
+</div>
+
+
           </div>
 
           {/* ----group info--- */}
