@@ -110,12 +110,20 @@ else {
 
                     <div className=" absolute sm:bottom-[-1px] sm:left-[44px]  md:left-[130px] lg:left-[333px] ">
                         <div>
+
+{!userisingroup && (
+
                             <img
                                 onClick={addgroup}
                                 className=" w-14 h-14 rounded-full"
                                 src="https://cdn1.iconfinder.com/data/icons/basic-user-interface-7/24/new_plus_create_add_increase-256.png"
                                 alt=""
                             />
+                        )}
+
+{userisingroup && ('delete from group' ) }
+
+
                         </div>
                     </div>
                 </div>
