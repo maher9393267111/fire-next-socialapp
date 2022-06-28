@@ -1,6 +1,7 @@
 import React from "react";
 import Moment from "react-moment";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import {
   collection,
   deleteDoc,
@@ -41,7 +42,7 @@ const PostCard = ({ post }) => {
   useEffect(() => {
     // like.id is doc from likes collection  and compare it with current user's id
 
-    if (postLikes) {
+    if (postLikes) {   // ---->>> importnat to work good
       setHasLiked(
         postLikes.findIndex((like) => like.username === userinfo.name) !== -1
       );
@@ -140,11 +141,12 @@ const PostCard = ({ post }) => {
             <div className=" flex  justify-around">
               {/* ---Comments--- */}
               <div>
-                <img
+                <Link href={`/post/${post.id}`}><img
                   className=" w-8 h-8 rounded-full"
                   src="https://cdn4.iconfinder.com/data/icons/hiba-vol-1-1/512/comments-256.png"
                   alt=""
                 />
+                </Link>
               </div>
 
               <div className=" flex gap-2">

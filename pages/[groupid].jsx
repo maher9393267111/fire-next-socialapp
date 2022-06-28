@@ -78,10 +78,7 @@ const Groupid = ({}) => {
 
   useEffect(() => {
     if (groupid || group) {
-      fethGroup().then(() => {
-        //  getPostsInGroup(groupid);
-      });
-    }
+      fethGroup() }
   }, [db, groupid, refresh]);
 
   const addgroup = async () => {
