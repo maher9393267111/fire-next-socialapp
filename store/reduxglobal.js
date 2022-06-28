@@ -19,6 +19,7 @@ const authSlice = createSlice({
         name:'maher',
       
         groupusers: [],
+        groupPosts: [],
   
       
         
@@ -38,6 +39,12 @@ const authSlice = createSlice({
 state.groupusers = action.payload;
         }
 
+        ,
+        setGroupPosts: (state, action) => {
+
+            state.groupPosts = action.payload;
+
+        }
 
 
 
@@ -64,5 +71,5 @@ state.groupusers = action.payload;
 
 
 // Export our slice and the action types:
-export const { setIsLoggedIn, setname, setGroupUsers } = authSlice.actions;
+export const { setIsLoggedIn, setname, setGroupUsers,   setGroupPosts } = authSlice.actions;
 export default authSlice.reducer;

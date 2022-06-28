@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import CreatePost from "../components/singlegroup/createPost";
 import safeJsonStringify from "safe-json-stringify";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
@@ -18,6 +19,8 @@ import {
   updateDoc,
   query,
   orderBy,
+    where,
+    getDocs
 } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useAuth } from "../context/global";
@@ -30,53 +33,74 @@ const Groupid = ({}) => {
 
   const dispatch = useDispatch();
   const [group, setGroup] = useState(null);
-  const [groupUsers, setGroupUsers] = useState([]);
+  const [groupUsers, setGroupUsers,getPostsInGroup] = useState([]);
+  const [refresh, setRefresh] = useState(false);
 
   const fethGroup = async () => {
     const groupRef = doc(db, "Groups", groupid);
     const groupr = await getDoc(groupRef);
 
     await setGroup({ id: groupid, ...groupr.data() });
+
+
+
+   const userin = await getDocs(collection(db, 'Groups',groupid,'groupUsers'));
+
+const allPosts =[]
+
+   userin.forEach(
+    doc => (allPosts = [{...doc.data(), id: doc.id}])
+  );
+  console.log('🔥🔥🔥',allPosts);
+  setGroupUsers(allPosts);
+  return allPosts;
+
+
+
+
+  //console.log('🔥🔥🔥',userin);
+
   };
 
   useEffect(() => {
     if (groupid || group) {
-      fethGroup();
+      fethGroup().then(() => {
+
+      //  getPostsInGroup(groupid);
+      }
+        );
     }
-  }, [db, groupid]);
+  }, [db, groupid,refresh]);
 
   const addgroup = async () => {
     addUserToGroup(groupid, userinfo, group);
+    setRefresh(!refresh);
   };
 
   const deletegroup = async () => {
     await delteGroupusers(groupid, userinfo.id);
+    setRefresh(!refresh);
   };
 
   const [userisingroup, setUserisingroup] = useState(false);
+ 
 
-  const q = query(
-    collection(db, "Groups", groupid, "groupUsers")
-    // orderBy("timestamp")
-  );
-  const [users, loading] = useCollectionData(q);
 
-  console.log("Users -2-2-2-2---->", users);
-  console.log("loading---->", groupid);
-
-  // current user is in group or not
 
   useEffect(() => {
-    const check = users?.filter((user) => user.id === userinfo.id);
+    const check = groupUsers?.filter((user) => user.id === userinfo.id);
 
+    
     if (check?.length > 0) {
       setUserisingroup(true);
     } else {
       setUserisingroup(false);
     }
 
-    console.log("check---->", check);
-  }, [users]);
+    console.log("chec 🔴🔴🔴k---->", check);
+  }, [groupUsers,db]);
+
+
 
   return (
     <div className=" min-h-[122vh]">
@@ -130,12 +154,30 @@ const Groupid = ({}) => {
 <div className=" grid grid-cols-12 gap-4">
 
 
+{groupUsers?.length}
+
 {/* ----posts and create--- */}
 
 
 <div className=" col-span-9">
 
-posts
+
+{/* -----create post----- */}
+
+
+<div>
+
+
+<CreatePost groupid={groupid} />
+
+
+
+</div>
+
+
+
+{/* ---end of create post--- */}
+
 
 
 
@@ -168,7 +210,7 @@ posts
 
 
 <div>
-    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users : {users?.length}</h2>
+    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users : {groupUsers?.length}</h2>
 </div>
 
 
