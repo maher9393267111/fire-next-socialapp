@@ -168,7 +168,7 @@ posts
 
 
 <div>
-    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users : {users?.length}</h2>
+    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users  : {users?.length}</h2>
 </div>
 
 
