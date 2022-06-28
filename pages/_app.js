@@ -1,7 +1,7 @@
 import '../styles/globals.css'
 import Global from '../context/global'
 import { wrapper } from "../store/index";
-import Navbar from '../components/Header/Navbar'
+import Navbar from '../components/nav/Navbar'
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer } from 'react-toastify';
 import 'antd/dist/antd.css';

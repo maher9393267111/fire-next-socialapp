@@ -122,7 +122,7 @@ const Groupid = ({}) => {
 {/* -------data and fgroup posts--- */}
 
 
-<div>
+<div className=" mt-12 mr-12 ml-12">
 
 
 {/* --grid- */}
@@ -132,6 +132,25 @@ const Groupid = ({}) => {
 
 {/* ----posts and create--- */}
 
+
+<div className=" col-span-9">
+
+posts
+
+
+
+</div>
+
+
+
+{/* ----group info--- */}
+
+<div className=" col-span-3">
+
+group info
+
+
+</div>
 
 
 
