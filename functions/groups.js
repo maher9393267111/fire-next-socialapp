@@ -14,6 +14,7 @@ import {
   arrayUnion,
   addDoc,
   deleteDoc,
+  serverTimestamp
 } from "firebase/firestore";
 
 import {
@@ -94,3 +95,46 @@ export const deleteGroup = async (groupdata, groupid) => {
   const groupDoc = doc(db, "Groups", groupid);
   await deleteDoc(groupDoc);
 };
+
+
+// add users to group
+
+export const addUserToGroup = async (groupid, userdata) => {
+
+
+try{
+
+  // add users collection to group collection
+
+
+  const docRef = doc(db, "Groups", groupid);
+  const colRef = collection(docRef, `${userdata.id}`)
+  addDoc(colRef, {
+
+    name: userdata.name,
+    email: userdata.email,
+
+
+
+  }).then(() => {
+
+    toast.success("User Added");
+  })
+
+
+
+
+
+
+
+
+
+
+}
+catch(error){
+  toast.error(error.message);
+
+}
+
+
+}
