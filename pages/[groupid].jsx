@@ -19,8 +19,8 @@ import {
   updateDoc,
   query,
   orderBy,
-    where,
-    getDocs
+  where,
+  getDocs,
 } from "firebase/firestore";
 import { db, storage } from "../firebase";
 import { useAuth } from "../context/global";
@@ -33,8 +33,9 @@ const Groupid = ({}) => {
 
   const dispatch = useDispatch();
   const [group, setGroup] = useState(null);
-  const [groupUsers, setGroupUsers,getPostsInGroup] = useState([]);
+  const [groupUsers, setGroupUsers, getPostsInGroup] = useState([]);
   const [refresh, setRefresh] = useState(false);
+  const [grouoPosts, setGrouoPosts] = useState([]);
 
   const fethGroup = async () => {
     const groupRef = doc(db, "Groups", groupid);
@@ -42,35 +43,48 @@ const Groupid = ({}) => {
 
     await setGroup({ id: groupid, ...groupr.data() });
 
+    const userin = await getDocs(
+      collection(db, "Groups", groupid, "groupUsers")
+    );
 
+    const allUsers = [];
 
-   const userin = await getDocs(collection(db, 'Groups',groupid,'groupUsers'));
-
-const allPosts =[]
-
-   userin.forEach(
-    doc => (allPosts = [{...doc.data(), id: doc.id}])
-  );
-  console.log('🔥🔥🔥',allPosts);
-  setGroupUsers(allPosts);
-  return allPosts;
-
+    // allUsers = [{ ...doc.data(), id: doc.id }])
+    userin.forEach((doc) => (allUsers.push({ ...doc.data(), id: doc.id })));
+   // console.log("🔥🔥🔥", allUsers);
+    setGroupUsers(allUsers);
+  //  return allPosts;
 
 
 
-  //console.log('🔥🔥🔥',userin);
+//const allPosts =[]
+
+ // const Posts =  query(collection(db, "posts"), where("groupid", "==", `${groupid}`));
+
+ const q = query(collection(db, "posts"), where("groupid", "==", groupid));
+ const unsub = onSnapshot(q, (QuerySnapshot) => {
+   let postsArray = [];
+   QuerySnapshot.forEach((doc) => {
+     postsArray.push({ ...doc.data(), id: doc.id });
+   });
+   console.log("from vivek", postsArray);
+    setGrouoPosts(postsArray);
+    console.log("🔥🔥🔥", grouoPosts);
+  // setTodos(postsArray);
+ });
+
+
+
 
   };
 
   useEffect(() => {
     if (groupid || group) {
       fethGroup().then(() => {
-
-      //  getPostsInGroup(groupid);
-      }
-        );
+        //  getPostsInGroup(groupid);
+      });
     }
-  }, [db, groupid,refresh]);
+  }, [db, groupid, refresh]);
 
   const addgroup = async () => {
     addUserToGroup(groupid, userinfo, group);
@@ -83,14 +97,10 @@ const allPosts =[]
   };
 
   const [userisingroup, setUserisingroup] = useState(false);
- 
-
-
 
   useEffect(() => {
     const check = groupUsers?.filter((user) => user.id === userinfo.id);
 
-    
     if (check?.length > 0) {
       setUserisingroup(true);
     } else {
@@ -98,9 +108,7 @@ const allPosts =[]
     }
 
     console.log("chec 🔴🔴🔴k---->", check);
-  }, [groupUsers,db]);
-
-
+  }, [groupUsers, db]);
 
   return (
     <div className=" min-h-[122vh]">
@@ -142,117 +150,72 @@ const allPosts =[]
 
       {userisingroup ? "yes in group" : " now not inm group"}
 
+      {/* -------data and fgroup posts--- */}
 
-{/* -------data and fgroup posts--- */}
+      <div className=" mt-12 mr-12 ml-12">
+        {/* --grid- */}
 
+        <div className=" grid grid-cols-12 gap-4">
+          {/* ----posts and create--- */}
 
-<div className=" mt-12 mr-12 ml-12">
+          <div className=" col-span-9">
+            {/* -----create post----- */}
 
+            <div>
+              <CreatePost groupid={groupid} />
+            </div>
 
-{/* --grid- */}
+            {/* ---end of create post--- */}
+          </div>
 
-<div className=" grid grid-cols-12 gap-4">
+          {/* ----group info--- */}
 
+          <div className=" col-span-3">
+            <div>
+              {/* -header--- */}
 
-{groupUsers?.length}
+              <div>
+                <h1 className="text-2xl transition-all duration-200 text-blue-600 hover:scale-110">
+                  {" "}
+                  Group Info
+                </h1>
+              </div>
 
-{/* ----posts and create--- */}
+              <div className=" my-2">
+                <div>
+                  <h2 className="text-md transition-all duration-200 text-blue-600 ">
+                    {" "}
+                    Group Name : {group?.text}
+                  </h2>
+                </div>
 
+                <div>
+                  <h2 className="text-md transition-all duration-200 text-blue-600 ">
+                    {" "}
+                    Group Users : {groupUsers?.length}
 
-<div className=" col-span-9">
+                    <div>
+                        {groupUsers?.map((user) => (
 
-
-{/* -----create post----- */}
-
-
-<div>
-
-
-<CreatePost groupid={groupid} />
-
-
-
+<div key ={user?.name} className="">
+    <h1>{user?.name}</h1>
 </div>
+                        ))}
+                    </div>
+                  </h2>
+                </div>
 
-
-
-{/* ---end of create post--- */}
-
-
-
-
-</div>
-
-
-
-{/* ----group info--- */}
-
-<div className=" col-span-3">
-
-
-<div>
-
-
-{/* -header--- */}
-
-<div>
-
-    <h1 className="text-2xl transition-all duration-200 text-blue-600 hover:scale-110"> Group Info</h1>
-</div>
-
-
-<div className=" my-2">
-
-
-<div>
-    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Name : {group?.text}</h2>
-</div>
-
-
-<div>
-    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users : {groupUsers?.length}</h2>
-</div>
-
-
-
-<div>
-    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Posts : 85</h2>
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-</div>
-
-
-
-
-
-
-
-</div>
-
-
-
-
-
+                <div>
+                  <h2 className="text-md transition-all duration-200 text-blue-600 ">
+                    {" "}
+                    Group Posts : {grouoPosts?.length}
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
