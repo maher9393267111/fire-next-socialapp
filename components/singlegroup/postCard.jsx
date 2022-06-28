@@ -21,13 +21,14 @@ import { deleteObject, ref } from "firebase/storage";
 import { toast } from "react-toastify";
 import { db, storage } from "../../firebase";
 import { useAuth } from "../../context/global";
-
+import { useDispatch } from "react-redux";
+import { setPostId } from "../../store/reduxglobal";
 import { useState, useEffect } from "react";
 import { map } from "@firebase/util";
 const PostCard = ({ post }) => {
   const router = useRouter();
   const { userinfo } = useAuth();
-
+const dispatch = useDispatch();
   const [hasLiked, setHasLiked] = useState(false);
 
   const [likes, setLikes] = useState(0);
@@ -36,7 +37,23 @@ const PostCard = ({ post }) => {
     collection(db, "posts", post.id, "likes")
     // orderBy("timestamp")
   );
+
+
   const [postLikes, loading] = useCollectionData(q,  { idField: "id" });
+
+
+useEffect(() => {
+
+
+
+
+}, [db,post.likes]);
+  
+
+  
+
+
+ 
   //const [chat] = useDocumentData(doc(db, "chats", id));
 
   useEffect(() => {
@@ -140,7 +157,9 @@ const PostCard = ({ post }) => {
 
             <div className=" flex  justify-around">
               {/* ---Comments--- */}
-              <div>
+              <div
+              onClick={() => {dispatch(setPostId(post.id))}}
+              >
                 <Link href={`/post/${post.id}`}><img
                   className=" w-8 h-8 rounded-full"
                   src="https://cdn4.iconfinder.com/data/icons/hiba-vol-1-1/512/comments-256.png"

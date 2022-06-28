@@ -2,7 +2,7 @@ import React from "react";
 import Link from "next/link";
 import Moment from "react-moment";
 import {HeartOutlined,CommentOutlined  } from "@ant-design/icons";
-
+import { useSelector } from "react-redux";
 import {
   useCollectionData,
   useDocumentData,
@@ -35,7 +35,7 @@ const Post = () => {
   const router = useRouter();
   const { postid } = router.query;
   console.log(postid);
-
+const {postId} = useSelector(state => state.global);
 
 
 
@@ -43,24 +43,40 @@ const Post = () => {
   
   const [likes, setLikes] = useState(0);
 
-  const q = query(
-    collection(db, "posts", postid, "likes")
-    // orderBy("timestamp")
-  );
-  const [postLikes, loading] = useCollectionData(q,  { idField: "id" });
 
 
-    useEffect(() => {
 
-if (postLikes) {   // ---->>> importnat to work good
-  setHasLiked(
-    postLikes.findIndex((like) => like.username === userinfo.name) !== -1
-  );
-  console.log("has liked---->", hasLiked);
-}
+//   const q = query(
+//     collection(db, "posts",postid && post.id, "likes")
+//     // orderBy("timestamp")
+//   );
+
+useEffect(() => {
+
+    const q = query(
+        collection(db, "posts", postId, "likes")
+        // orderBy("timestamp")
+      );
 
 
-    }, [postLikes]);
+}, [db]);
+
+
+
+  //const [postLikes, loading] = useCollectionData(q,  { idField: "id" });
+
+
+//     useEffect(() => {
+
+// if (postLikes) {   // ---->>> importnat to work good
+//   setHasLiked(
+//     postLikes.findIndex((like) => like.username === userinfo.name) !== -1
+//   );
+//   console.log("has liked---->", hasLiked);
+// }
+
+
+//     }, [postLikes]);
 
 
 
@@ -188,24 +204,24 @@ if (postLikes) {   // ---->>> importnat to work good
 <div>
 
 {/* ----if user make like show this---- */}
-
-{hasLiked && 
+ {hasLiked &&  
 <div>
     <img  className="w-10 rounded-full h-10" src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png" alt="" />
 </div>
-}
+ } 
 
 
 
 {/* ----if user Not  make like Yet show this---- */}
 
- {!hasLiked && 
+  {!hasLiked &&  
 
  <div>
     <img  className="w-10 rounded-full h-10" src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png" alt="" />
 </div> 
 
- }
+    }
+ 
 
 
 </div>
