@@ -33,9 +33,8 @@ import { useEffect } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
 import { auth, db } from "../firebase";
-
-
-
+import { useDispatch } from "react-redux";
+import { setGroupUsers } from "../store/reduxglobal";
 
 const authContext = createContext();
 
@@ -44,12 +43,10 @@ export const useAuth = () => {
 };
 
 const AuthContext = ({ children }) => {
- 
   const [currentuser, setUser] = useState({});
   const [userinfo, setUserinfo] = useState({});
-const [groupid_upate, setGroupid_update] = useState('');
-
-
+  const [groupid_upate, setGroupid_update] = useState("");
+  const dispatch = useDispatch();
 
   const signUp = async (email, password, name) => {
     await createUserWithEmailAndPassword(auth, email, password);
@@ -134,45 +131,24 @@ const [groupid_upate, setGroupid_update] = useState('');
     return unsubscribe;
   }, [auth]);
 
+  // ----modal
 
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
+  const showModal = () => {
+    setIsModalVisible(true);
+  };
 
+  const handleOk = () => {
+    setIsModalVisible(false);
+  };
 
-// ----modal
+  const handleCancel = () => {
+    setIsModalVisible(false);
+  };
 
-const [isModalVisible, setIsModalVisible] = useState(false);
+  // ----modal End
 
-const showModal = () => {
-  setIsModalVisible(true);
-};
-
-const handleOk = () => {
-  setIsModalVisible(false);
-};
-
-const handleCancel = () => {
-  setIsModalVisible(false);
-};
-
-
-
-
-
-
-// ----modal End
-
-
- 
-
-
-
-
-
- 
-
-  
-
-    
 
   const value = {
     signUp,
@@ -181,15 +157,15 @@ const handleCancel = () => {
 
     currentuser,
     userinfo,
-   
-    isModalVisible, setIsModalVisible,
+
+    isModalVisible,
+    setIsModalVisible,
     showModal,
     handleOk,
     handleCancel,
     groupid_upate,
-   setGroupid_update
-   
-    
+    setGroupid_update,
+  
   };
   return <authContext.Provider {...{ value }}>{children}</authContext.Provider>;
 };

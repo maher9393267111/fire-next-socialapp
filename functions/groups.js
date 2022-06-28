@@ -14,7 +14,7 @@ import {
   arrayUnion,
   addDoc,
   deleteDoc,
-  serverTimestamp
+  serverTimestamp,
 } from "firebase/firestore";
 
 import {
@@ -96,89 +96,83 @@ export const deleteGroup = async (groupdata, groupid) => {
   await deleteDoc(groupDoc);
 };
 
-
 // add users to group
 
 
 
 
 
-export const addUserToGroup2 = async (groupid, userdata) => {
-
-
-try{
-
-  // add users collection to group collection
-
-
-  const docRef = doc(db, "Groups", groupid);  // add suer collection to thid do
-  const colRef = collection(docRef, 'groupUsers',`${userdata.id}`) // add user to this Sub-collection
-  addDoc(colRef, {
-
-    name: userdata.name,
-    email: userdata.email,
-    image: userdata.image,
-    id: userdata.id,
-    createdAt: serverTimestamp(),
-
-
-
-  }).then(() => {
-
-    toast.success("User Added");
-  })
 
 
 
 
-
-
-
-
-
-
-}
-catch(error){
-  toast.error(error.message);
-
-}
-
-
-}
-
-
-
-export const addUserToGroup = async (groupid, userdata) => {
-
-
-  try{
-  
+export const addUserToGroup = async (groupid, userdata, groupdata) => {
+  try {
     // add users collection to group collection
-  
-    await setDoc(doc(db, "Groups", groupid, 'groupUsers',userdata?.email), {
 
-name: userdata.name,
-email: userdata.email,
-image: userdata.image,
-id: userdata.id,
-createdAt: serverTimestamp(),
+    await setDoc(doc(db, "Groups", groupid, "groupUsers", userdata?.email), {
+      name: userdata.name,
+      email: userdata.email,
+      image: userdata.image,
+      id: userdata.id,
+      createdAt: serverTimestamp(),
+    }).then(async () => {
+      await setDoc(
+        doc(db, "Users", userdata.id, "userGroups", groupdata.text),
+        {
+          groupid: groupid,
+          name: groupdata.text,
+          groupImg: groupdata.image,
+          image: userdata.image,
+          id: groupdata.id,
+          //   uid: groupdata.uid,
+          createdAt: serverTimestamp(),
+        }
+      );
 
-
-    }).then(() => {
-  
       toast.success("User Added");
-    })
-  
-  
-  
-  
-  
-  
-  }
-  catch(error){
+    });
+  } catch (error) {
     toast.error(error.message);
-  
   }
-  
-  
+};
+
+
+
+
+
+// delete user from group if he exists
+
+const delteuserfromgroup = async (groupid, userdata, groupdata) => {
+
+
+
+// check if user exists in group
+
+  const groupUsers = doc(db, "Groups", groupid, "groupUsers", userdata?.email);
+  const userGroups = doc(db, "Users", userdata.id, "userGroups", groupdata.text);
+
+  const groupUsersData = await getDoc(groupUsers);
+  const userGroupsData = await getDoc(userGroups);
+
+  if (groupUsersData.exists) {
+    await deleteDoc(groupUsers);
   }
+
+  if (userGroupsData.exists) {
+    await deleteDoc(userGroups);
+     //await deleteDoc(doc(db, "Groups", groupid, "groupUsers", userdata?.email));
+  }
+}
+
+
+
+
+
+ 
+
+
+
+
+ 
+

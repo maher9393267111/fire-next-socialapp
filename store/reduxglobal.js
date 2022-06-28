@@ -17,9 +17,8 @@ const authSlice = createSlice({
         isAuthLoading: false,
         user: {},
         name:'maher',
-        singleproduct: {},
-        categories: [],
-        subCategoies: [],
+      
+        groupusers: [],
   
       
         
@@ -35,6 +34,9 @@ const authSlice = createSlice({
             console.log('🚀🚀🚀🚀🚀🚀🚀🚀🚀 Action Payload------>',action.payload);
             state.user = action.payload;
         },
+        setGroupUsers: (state, action) => {
+state.groupusers = action.payload;
+        }
 
 
 
@@ -62,5 +64,5 @@ const authSlice = createSlice({
 
 
 // Export our slice and the action types:
-export const { setIsLoggedIn, setname } = authSlice.actions;
+export const { setIsLoggedIn, setname, setGroupUsers } = authSlice.actions;
 export default authSlice.reducer;

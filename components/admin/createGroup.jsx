@@ -3,7 +3,7 @@ import { EmojiHappyIcon, PhotographIcon, XIcon } from "@heroicons/react/outline"
 import { useAuth } from "../../context/global";
 import { useState, useRef } from "react";
 import { db, storage } from "../../firebase";
-import { addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore'
+import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
 import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 
@@ -25,14 +25,16 @@ export default function Input() {
     if (loading) return;
     setLoading(true);
 
-    const docRef = await addDoc(collection(db, "Groups"), {
-      id: userinfo.id,
-      text: input,
-     // groupImg: image,
-      timestamp: serverTimestamp(),
-      creator: userinfo.name,
+    // const docRef = await addDoc(collection(db, "Groups"), {
+    //   id: userinfo.id,
+    //   text: input,
+    //  // groupImg: image,
+    //   timestamp: serverTimestamp(),
+    //   creator: userinfo.name,
     
-    });
+    // });
+
+
 
     const imageRef = ref(storage, `groups/${input}/image`);
 
@@ -40,9 +42,28 @@ export default function Input() {
       // Upload image as url to storage then send it to current user's post doc as update
       await uploadString(imageRef, selectedFile, "data_url").then(async () => {
         const downloadURL = await getDownloadURL(imageRef);
-        await updateDoc(doc(db, "Groups", docRef.id), {
+
+        const docRef = setDoc(doc(db, "Groups", input), {
+
+
+          text: input,
           image: downloadURL,
-        });
+          timestamp: serverTimestamp(),
+          creator: userinfo.name,
+        
+        
+        })
+
+
+
+        // await updateDoc(doc(db, "Groups", docRef.id), {
+        //   image: downloadURL,
+        // });
+
+
+
+
+
       });
     }
 
