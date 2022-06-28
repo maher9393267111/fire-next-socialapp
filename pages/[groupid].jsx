@@ -162,7 +162,7 @@ const Groupid = ({}) => {
             {/* -----create post----- */}
 
             <div>
-              <CreatePost groupid={groupid} />
+              <CreatePost userisingroup={userisingroup} groupid={groupid} />
             </div>
 
             {/* ---end of create post--- */}
