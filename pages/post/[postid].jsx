@@ -54,7 +54,7 @@ const {postId} = useSelector(state => state.global);
 useEffect(() => {
 
     const q = query(
-        collection(db, "posts", postId, "likes")
+        collection(db, "posts", postId ? postId : postid ? postid :post.id, "likes")
         // orderBy("timestamp")
       );
 
