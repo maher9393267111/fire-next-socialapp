@@ -99,7 +99,11 @@ export const deleteGroup = async (groupdata, groupid) => {
 
 // add users to group
 
-export const addUserToGroup = async (groupid, userdata) => {
+
+
+
+
+export const addUserToGroup2 = async (groupid, userdata) => {
 
 
 try{
@@ -107,12 +111,15 @@ try{
   // add users collection to group collection
 
 
-  const docRef = doc(db, "Groups", groupid);
-  const colRef = collection(docRef, `${userdata.id}`)
+  const docRef = doc(db, "Groups", groupid);  // add suer collection to thid do
+  const colRef = collection(docRef, 'groupUsers',`${userdata.id}`) // add user to this Sub-collection
   addDoc(colRef, {
 
     name: userdata.name,
     email: userdata.email,
+    image: userdata.image,
+    id: userdata.id,
+    createdAt: serverTimestamp(),
 
 
 
@@ -138,3 +145,40 @@ catch(error){
 
 
 }
+
+
+
+export const addUserToGroup = async (groupid, userdata) => {
+
+
+  try{
+  
+    // add users collection to group collection
+  
+    await setDoc(doc(db, "Groups", groupid, 'groupUsers',userdata?.email), {
+
+name: userdata.name,
+email: userdata.email,
+image: userdata.image,
+id: userdata.id,
+createdAt: serverTimestamp(),
+
+
+    }).then(() => {
+  
+      toast.success("User Added");
+    })
+  
+  
+  
+  
+  
+  
+  }
+  catch(error){
+    toast.error(error.message);
+  
+  }
+  
+  
+  }
