@@ -9,55 +9,51 @@ import {
     doc,
     onSnapshot,
     setDoc,
+    getDoc
   } from "firebase/firestore";
   import { db, storage } from "../firebase";
-const Groupid = ({groupdata}) => {
+const Groupid = ({}) => {
 
     const router = useRouter();
     const { groupid } = router.query;
     console.log(groupid);
 
-console.log(groupdata);
+    const [group, setGroup] = useState(null);
+
+    const fethGroup = async () => {
+        const groupRef = doc(db, "Groups", groupid);
+        const group = await getDoc(groupRef);
+    
+        setGroup({ id:groupid, ...group.data() });
+    
+      
+    
+     
+      };
+    
+      useEffect(() => {
+        if (groupid) {
+          fethGroup();
+        }
+      }, [db, groupid]);
+
+
+
+
 
 
     return (
         <div>
             
             {groupid}
-            {groupdata?.text}
+
+            {group?.text}
+          
           
         </div>
     );
 }
 
+
+
 export default Groupid;
-
-
-// serverside props are used to pass data to the component
-export async function getServerSideProps(context) {
-    console.log("GET SERVER SIDE PROPS RUNNING");
-  
-    try {
-        const group = await doc(`groups/${context.query.groupid}`).get();
-      const communityDoc = await getDoc(group);
-      return {
-        props: {
-          groupdata: communityDoc.exists()
-            ? JSON.parse(
-                safeJsonStringify({ id: communityDoc.id, ...communityDoc.data() }) // needed for dates
-              )
-            : "",
-        },
-      };
-    } catch (error) {
-        return {
-            redirect: {
-                destination: '/',
-                statusCode: 307,
-              //  console.log("getServerSideProps error - [community]", error)
-            }
-        }
-      // Could create error page here
-     
-    }
-  }
