@@ -147,7 +147,48 @@ posts
 
 <div className=" col-span-3">
 
-group info
+
+<div>
+
+
+{/* -header--- */}
+
+<div>
+
+    <h1 className="text-2xl transition-all duration-200 text-blue-600 hover:scale-110"> Group Info</h1>
+</div>
+
+
+<div className=" my-2">
+
+
+<div>
+    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Name : {group?.text}</h2>
+</div>
+
+
+<div>
+    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Users : {users?.length}</h2>
+</div>
+
+
+
+<div>
+    <h2 className="text-md transition-all duration-200 text-blue-600 ">   Group Posts : 85</h2>
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+</div>
+
+
 
 
 </div>
