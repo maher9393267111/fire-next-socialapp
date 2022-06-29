@@ -96,7 +96,7 @@ useEffect(() => {
     <div>
       <div
         className={` ${
-          post.image ? "h-[366px]" : "h-[170px]"
+          post.image ? "h-[400px]" : "h-[170px]"
         }  border-2 sm:text-left lg:text-center mx-auto border-blue-700 w-[344px]  p-2`}
       >
         {/* ---content-- */}

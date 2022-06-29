@@ -20,3 +20,9 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.icon-parent:hover{
+  fill: currentColor;
+  color:rgba(0, 186, 124, 0.2) ;
+  background-color: rgba(29, 205, 146, 0.2);
+}
