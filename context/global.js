@@ -34,7 +34,7 @@ import { useContext } from "react";
 import { createContext } from "react";
 import { auth, db } from "../firebase";
 import { useDispatch } from "react-redux";
-import { setGroupUsers,   setGroupPosts } from "../store/reduxglobal";
+import { setGroupUsers,   setGroupPosts,  setUserGroups } from "../store/reduxglobal";
 import {toast} from 'react-toastify';
 const authContext = createContext();
 
@@ -182,15 +182,15 @@ const AuthContext = ({ children }) => {
 
     const getUserGroups = async (userid) => {
     
-    
-      const q = query(collection(db, "posts"), where("userid", "==", userid));
+    //  where("userid", "==", userid))
+      const q = query(collection(db, "Users",userid, 'userGroups'))
       const unsub = onSnapshot(q, (QuerySnapshot) => {
         let postsArray = [];
         QuerySnapshot.forEach((doc) => {
           postsArray.push({ ...doc.data(), id: doc.id });
         });
-        console.log("from vivek", postsArray);
-        dispatch(setGroupPosts(postsArray));
+        console.log("user posts fetched-->>>>", postsArray);
+        dispatch(setUserGroups(postsArray));
        // setTodos(postsArray);
       });
 
@@ -200,6 +200,8 @@ const AuthContext = ({ children }) => {
     };
 
 
+
+    
 
 
 
@@ -223,6 +225,7 @@ const AuthContext = ({ children }) => {
     groupid_upate,
     setGroupid_update,
     getPostsInGroup,
+    getUserGroups
   
   };
   return <authContext.Provider {...{ value }}>{children}</authContext.Provider>;
