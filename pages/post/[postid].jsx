@@ -1,7 +1,9 @@
 import React from "react";
 import Link from "next/link";
 import CreateComment from "../../components/comments/createComment";
+import CommentsList from "../../components/comments/CommnetsList";
 import Moment from "react-moment";
+
 import {HeartOutlined,CommentOutlined  } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import {
@@ -325,9 +327,20 @@ if (likesdata) {   // ---->>> importnat to work good
 
 <CreateComment refresh={refresh} setRefresh={setRefresh} postid ={postid}/>
 
-{comments?.length}
+{/* {comments?.length} */}
 
- {comments?.map((comment) => (<div>{comment?.text}</div>))}
+
+{/* ---Commnets start--- */}
+
+
+<div>
+
+
+<CommentsList comments={comments}/>
+
+</div>
+
+
 </div>
 
 
