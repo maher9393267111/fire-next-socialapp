@@ -4,7 +4,7 @@ import CreateComment from "../../components/comments/createComment";
 import CommentsList from "../../components/comments/CommnetsList";
 import Moment from "react-moment";
 
-import {HeartOutlined,CommentOutlined  } from "@ant-design/icons";
+import { HeartOutlined, CommentOutlined } from "@ant-design/icons";
 import { useSelector } from "react-redux";
 import {
   useCollectionData,
@@ -12,7 +12,7 @@ import {
 } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-import {toast} from "react-toastify";
+import { toast } from "react-toastify";
 import {} from "../../functions/groups";
 import {} from "../../store/reduxglobal";
 import { useDispatch } from "react-redux";
@@ -28,7 +28,6 @@ import {
   orderBy,
   where,
   getDocs,
-  
 } from "firebase/firestore";
 import { db, storage } from "../../firebase";
 import { useAuth } from "../../context/global";
@@ -39,18 +38,16 @@ const Post = () => {
   const router = useRouter();
   const { postid } = router.query;
   console.log(postid);
-const {postId} = useSelector(state => state.global);
-
-
+  const { postId } = useSelector((state) => state.global);
 
   const [hasLiked, setHasLiked] = useState(false);
-  
+
   const [likes, setLikes] = useState(0);
 
   const [likesdata, setLikesdata] = useState([]);
-const [refresh, setRefresh] = useState(false);
+  const [refresh, setRefresh] = useState(false);
 
-const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState([]);
 
   const [post, setPost] = useState({});
 
@@ -58,119 +55,88 @@ const [comments, setComments] = useState([]);
     const groupRef = doc(db, "posts", postid);
     const postr = await getDoc(groupRef);
 
-
     await setPost({ id: postid, ...postr.data() });
 
-    const userin = await getDocs(
-        collection(db, "posts", postid, "likes")
-      );
-  
-      const allLikes = [];
-  
-   
-      userin.forEach((doc) => (allLikes.push({ ...doc.data(), id: doc.id })));
+    const userin = await getDocs(collection(db, "posts", postid, "likes"));
+
+    const allLikes = [];
+
+    userin.forEach((doc) => allLikes.push({ ...doc.data(), id: doc.id }));
     //  console.log("🔥🔥🔥", allLikes);
-      setLikesdata(allLikes);
+    setLikesdata(allLikes);
     //  return allPosts;
 
+    // Post commnets Fetch-------------
 
-// Post commnets Fetch-------------
-
-
-
-
-
-// qury and order by timestamp
-const q = query(collection(db, "posts", postid, "comments"), orderBy("timestamp", "desc"));
+    // qury and order by timestamp
+    const q = query(
+      collection(db, "posts", postid, "comments"),
+      orderBy("timestamp", "desc")
+    );
 
     const unsub = onSnapshot(q, (QuerySnapshot) => {
-        let commentsArray = [];
-        QuerySnapshot.forEach((doc) => {
-            commentsArray.push({ ...doc.data(), id: doc.id });
-            setComments(commentsArray);
-        }
-        );
-    })
+      let commentsArray = [];
+      QuerySnapshot.forEach((doc) => {
+        commentsArray.push({ ...doc.data(), id: doc.id });
+        setComments(commentsArray);
+      });
+    });
 
-//---------------Not work for order by timestamp-----------
+    //---------------Not work for order by timestamp-----------
 
     // const postcommnets = await getDocs(
     //     collection(db, "posts", postid, "comments") ,orderBy("timestamp", "desc")
     //   );
 
-//   const allComments = [];
+    //   const allComments = [];
 
-
-
-//   postcommnets.forEach((doc) => (allComments.push({ ...doc.data(), id: doc.id })));
-//   console.log("🔥🔥🔥", allComments);
-//   setComments(allComments);
-
-
- 
+    //   postcommnets.forEach((doc) => (allComments.push({ ...doc.data(), id: doc.id })));
+    //   console.log("🔥🔥🔥", allComments);
+    //   setComments(allComments);
   };
 
   useEffect(() => {
     if (postid) {
       fethPost();
     }
-  }, [db, postid,refresh]);
+  }, [db, postid, refresh]);
 
+  useEffect(() => {
+    if (likesdata) {
+      // ---->>> importnat to work good
+      setHasLiked(
+        likesdata.findIndex((like) => like.username === userinfo.name) !== -1
+      );
+      console.log("has liked---->", hasLiked);
+    }
+  }, [likesdata, refresh]);
 
-
-
-
-
-
-
-
-
-
-    useEffect(() => {
-
-if (likesdata) {   // ---->>> importnat to work good
-  setHasLiked(
-    likesdata.findIndex((like) => like.username === userinfo.name) !== -1
-  );
-  console.log("has liked---->", hasLiked);
-}
-
-
-    }, [likesdata,refresh]);
-
-
-
-    const likedPost = async () => {
-        try {
-          if (userinfo.name) {
-            if (hasLiked) {
-                setRefresh(!refresh);
-              console.log(post.id, "___post id____");
-              // delete doc from likes if aleready liked
-              await deleteDoc(doc(db, "posts", post.id, "likes", userinfo.id));
-              toast.error("Post unliked");
-            } else {
-                setRefresh(!refresh);
-              console.log(post.id, "___post id____");
-              // add doc to likes if not already liked
-              await setDoc(doc(db, "posts", post.id, "likes", userinfo.id), {
-                username: userinfo.name,
-              });
-              toast.success("Post liked");
-            }
-          } else {
-            toast.error("Please login to like a post");
-            // router.push("/login");
-          }
-        } catch (error) {
-          toast.error(error.message);
+  const likedPost = async () => {
+    try {
+      if (userinfo.name) {
+        if (hasLiked) {
+          setRefresh(!refresh);
+          console.log(post.id, "___post id____");
+          // delete doc from likes if aleready liked
+          await deleteDoc(doc(db, "posts", post.id, "likes", userinfo.id));
+          toast.error("Post unliked");
+        } else {
+          setRefresh(!refresh);
+          console.log(post.id, "___post id____");
+          // add doc to likes if not already liked
+          await setDoc(doc(db, "posts", post.id, "likes", userinfo.id), {
+            username: userinfo.name,
+          });
+          toast.success("Post liked");
         }
-      };
-    
-
-
-
-
+      } else {
+        toast.error("Please login to like a post");
+        // router.push("/login");
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   return (
     <div className=" pb-[100px] ">
@@ -265,91 +231,77 @@ if (likesdata) {   // ---->>> importnat to work good
                     </div>
                   )}
 
+                  {/* -----icons- */}
 
-{/* -----icons- */}
+                  <div>
+                    <div className=" flex gap-12 mt-[31px] mb-12 justify-around">
+                      {/* --Like-- */}
 
+                      <div className=" flex gap-2">
+                        <span> {likesdata?.length}</span>
+                        {/* ----if user make like show this---- */}
+                        {hasLiked && (
+                          <div>
+                            <img
+                              onClick={likedPost}
+                              className="w-8 h-8 rounded-full "
+                              src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png"
+                              alt=""
+                            />
+                          </div>
+                        )}
 
-<div>
+                        {/* ----if user Not  make like Yet show this---- */}
 
-<div className=" flex gap-12 mt-[31px] mb-12 justify-around">
+                        {!hasLiked && (
+                          <img
+                            onClick={likedPost}
+                            className="w-8 rounded-full h-8"
+                            src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png"
+                            alt=""
+                          />
+                        )}
+                      </div>
 
-{/* --Like-- */}
+                      <div className=" flex gap-2">
+                        <span className=" mt-[3px] font-semibold">
+                          {comments?.length}
+                        </span>
 
-<div>
+                        <p className="icon-parent transition-all duration-200">
+                          <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                            className="r-4qtqp9 w-8 h-8 hover:fill-current r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"
+                          >
+                            <g>
+                              <path d="M14.046 2.242l-4.148-.01h-.002c-4.374 0-7.8 3.427-7.8 7.802 0 4.098 3.186 7.206 7.465 7.37v3.828c0 .108.044.286.12.403.142.225.384.347.632.347.138 0 .277-.038.402-.118.264-.168 6.473-4.14 8.088-5.506 1.902-1.61 3.04-3.97 3.043-6.312v-.017c-.006-4.367-3.43-7.787-7.8-7.788zm3.787 12.972c-1.134.96-4.862 3.405-6.772 4.643V16.67c0-.414-.335-.75-.75-.75h-.396c-3.66 0-6.318-2.476-6.318-5.886 0-3.534 2.768-6.302 6.3-6.302l4.147.01h.002c3.532 0 6.3 2.766 6.302 6.296-.003 1.91-.942 3.844-2.514 5.176z"></path>
+                            </g>
+                          </svg>
+                        </p>
 
-{/* ----if user make like show this---- */}
- {hasLiked &&  
-<div>
-    <img 
-    onClick={likedPost }
-    
-    className="w-8 h-8 rounded-full " src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png" alt="" />
-</div>
- } 
+                        {/* <p><img className="w-10 rounded-full h-10" src="https://cdn4.iconfinder.com/data/icons/office-thick-outline/36/office-28-256.png" alt="" /></p> */}
+                      </div>
+                    </div>
 
+                    {/* -----Create Comment ---- */}
 
+                    <div>
+                      <CreateComment
+                        refresh={refresh}
+                        setRefresh={setRefresh}
+                        postid={postid}
+                      />
 
-{/* ----if user Not  make like Yet show this---- */}
+                      {/* {comments?.length} */}
 
-  {!hasLiked &&  
+                      {/* ---Commnets start--- */}
 
- <div>
-    <img 
-    onClick={likedPost }
-    className="w-8 rounded-full h-8" src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png" alt="" />
-</div> 
-
-    }
- 
-
-
-</div>
-
-
-<div>
-
-<p className="icon-parent transition-all duration-200">
-<svg viewBox="0 0 24 24" aria-hidden="true" className="r-4qtqp9 w-8 h-8 hover:fill-current r-yyyyoo r-50lct3 r-dnmrzs r-bnwqim r-1plcrui r-lrvibr r-1srniue"><g><path d="M14.046 2.242l-4.148-.01h-.002c-4.374 0-7.8 3.427-7.8 7.802 0 4.098 3.186 7.206 7.465 7.37v3.828c0 .108.044.286.12.403.142.225.384.347.632.347.138 0 .277-.038.402-.118.264-.168 6.473-4.14 8.088-5.506 1.902-1.61 3.04-3.97 3.043-6.312v-.017c-.006-4.367-3.43-7.787-7.8-7.788zm3.787 12.972c-1.134.96-4.862 3.405-6.772 4.643V16.67c0-.414-.335-.75-.75-.75h-.396c-3.66 0-6.318-2.476-6.318-5.886 0-3.534 2.768-6.302 6.3-6.302l4.147.01h.002c3.532 0 6.3 2.766 6.302 6.296-.003 1.91-.942 3.844-2.514 5.176z"></path></g></svg>
-</p>
-
-{/* <p><img className="w-10 rounded-full h-10" src="https://cdn4.iconfinder.com/data/icons/office-thick-outline/36/office-28-256.png" alt="" /></p> */}
-
-</div>
-
-
-</div>
-
-
-{/* -----Create Comment ---- */}
-
-<div>
-
-
-<CreateComment refresh={refresh} setRefresh={setRefresh} postid ={postid}/>
-
-{/* {comments?.length} */}
-
-
-{/* ---Commnets start--- */}
-
-
-<div>
-
-
-<CommentsList comments={comments}/>
-
-</div>
-
-
-</div>
-
-
-
-
-</div>
-
-
-
+                      <div>
+                        <CommentsList userinfo={userinfo} comments={comments} />
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
