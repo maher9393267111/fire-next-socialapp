@@ -48,28 +48,6 @@ const {postId} = useSelector(state => state.global);
 
 
 
-
-
-
-
-
-  //const [postLikes, loading] = useCollectionData(q,  { idField: "id" });
-
-
-//     useEffect(() => {
-
-// if (postLikes) {   // ---->>> importnat to work good
-//   setHasLiked(
-//     postLikes.findIndex((like) => like.username === userinfo.name) !== -1
-//   );
-//   console.log("has liked---->", hasLiked);
-// }
-
-
-//     }, [postLikes]);
-
-
-
   const [post, setPost] = useState({});
 
   const fethPost = async () => {
@@ -101,6 +79,24 @@ const {postId} = useSelector(state => state.global);
       fethPost();
     }
   }, [db, postid]);
+
+
+
+    useEffect(() => {
+
+if (likesdata) {   // ---->>> importnat to work good
+  setHasLiked(
+    likesdata.findIndex((like) => like.username === userinfo.name) !== -1
+  );
+  console.log("has liked---->", hasLiked);
+}
+
+
+    }, [likesdata]);
+
+
+
+
 
   return (
     <div className=" pb-[100px] ">
