@@ -180,6 +180,28 @@ const AuthContext = ({ children }) => {
 
 
 
+    const getUserGroups = async (userid) => {
+    
+    
+      const q = query(collection(db, "posts"), where("userid", "==", userid));
+      const unsub = onSnapshot(q, (QuerySnapshot) => {
+        let postsArray = [];
+        QuerySnapshot.forEach((doc) => {
+          postsArray.push({ ...doc.data(), id: doc.id });
+        });
+        console.log("from vivek", postsArray);
+        dispatch(setGroupPosts(postsArray));
+       // setTodos(postsArray);
+      });
+
+      return unsub;
+      // const data = await getDocs(userCollectionRef);
+      // setTodos(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    };
+
+
+
+
 
 
 

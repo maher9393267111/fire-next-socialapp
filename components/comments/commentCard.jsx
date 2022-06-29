@@ -162,13 +162,13 @@ console.log('commentLikes ⚛️⚛️⚛️',commentLikes);
                       {/* --Like-- */}
 
                       <div className=" flex gap-2">
-                        {/* <span> {likesdata?.length}</span> */}
+                        <span className="mt-[4px]"> {commentLikes?.length}</span>
                         {/* ----if user make like show this---- */}
                         {hasLiked && (
                           <div>
                             <img
                               onClick={likedPost}
-                              className="w-[14px] h-[14px] rounded-full "
+                              className="w-10 h-10 rounded-full "
                               src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png"
                               alt=""
                             />
@@ -180,7 +180,7 @@ console.log('commentLikes ⚛️⚛️⚛️',commentLikes);
                         {!hasLiked && (
                           <img
                             onClick={likedPost}
-                            className="w-8 rounded-full h-8"
+                            className="w-10 h-10 rounded-full "
                             src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png"
                             alt=""
                           />
