@@ -43,23 +43,13 @@ const {postId} = useSelector(state => state.global);
   
   const [likes, setLikes] = useState(0);
 
+  const [likesdata, setLikesdata] = useState([]);
 
 
 
-//   const q = query(
-//     collection(db, "posts",postid && post.id, "likes")
-//     // orderBy("timestamp")
-//   );
-
-useEffect(() => {
-
-    const q = query(
-        collection(db, "posts", postId ? postId : postid ? postid :post.id, "likes")
-        // orderBy("timestamp")
-      );
 
 
-}, [db]);
+
 
 
 
@@ -88,6 +78,20 @@ useEffect(() => {
 
 
     await setPost({ id: postid, ...postr.data() });
+
+    const userin = await getDocs(
+        collection(db, "posts", postid, "likes")
+      );
+  
+      const allLikes = [];
+  
+   
+      userin.forEach((doc) => (allLikes.push({ ...doc.data(), id: doc.id })));
+      console.log("🔥🔥🔥", allLikes);
+      setLikesdata(allLikes);
+    //  return allPosts;
+
+
 
  
   };
