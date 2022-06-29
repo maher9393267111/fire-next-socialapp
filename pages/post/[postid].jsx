@@ -26,6 +26,7 @@ import {
   orderBy,
   where,
   getDocs,
+  
 } from "firebase/firestore";
 import { db, storage } from "../../firebase";
 import { useAuth } from "../../context/global";
@@ -66,7 +67,7 @@ const [comments, setComments] = useState([]);
   
    
       userin.forEach((doc) => (allLikes.push({ ...doc.data(), id: doc.id })));
-      console.log("🔥🔥🔥", allLikes);
+    //  console.log("🔥🔥🔥", allLikes);
       setLikesdata(allLikes);
     //  return allPosts;
 
@@ -74,16 +75,34 @@ const [comments, setComments] = useState([]);
 // Post commnets Fetch-------------
 
 
-const postcommnets = await getDocs(
-    collection(db, "posts", postid, "commnets")
-  );
-
-  const allComments = [];
 
 
-  postcommnets.forEach((doc) => (allComments.push({ ...doc.data(), id: doc.id })));
-  console.log("🔥🔥🔥", allComments);
-  setComments(allComments);
+
+// qury and order by timestamp
+const q = query(collection(db, "posts", postid, "comments"), orderBy("timestamp", "desc"));
+
+    const unsub = onSnapshot(q, (QuerySnapshot) => {
+        let commentsArray = [];
+        QuerySnapshot.forEach((doc) => {
+            commentsArray.push({ ...doc.data(), id: doc.id });
+            setComments(commentsArray);
+        }
+        );
+    })
+
+//---------------Not work for order by timestamp-----------
+
+    // const postcommnets = await getDocs(
+    //     collection(db, "posts", postid, "comments") ,orderBy("timestamp", "desc")
+    //   );
+
+//   const allComments = [];
+
+
+
+//   postcommnets.forEach((doc) => (allComments.push({ ...doc.data(), id: doc.id })));
+//   console.log("🔥🔥🔥", allComments);
+//   setComments(allComments);
 
 
  
@@ -94,6 +113,14 @@ const postcommnets = await getDocs(
       fethPost();
     }
   }, [db, postid,refresh]);
+
+
+
+
+
+
+
+
 
 
 
@@ -296,7 +323,7 @@ if (likesdata) {   // ---->>> importnat to work good
 <div>
 
 
-<CreateComment  postid ={postid}/>
+<CreateComment refresh={refresh} setRefresh={setRefresh} postid ={postid}/>
 
 {comments?.length}
 

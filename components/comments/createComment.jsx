@@ -9,7 +9,7 @@ import { getDownloadURL, ref, uploadString } from "firebase/storage";
 
 
 
-const CreateComment = ({ postid, }) => {
+const CreateComment = ({ postid,setRefresh,refresh }) => {
 
     const { userinfo } = useAuth();
     const [input, setInput] = useState("");
@@ -24,7 +24,7 @@ const CreateComment = ({ postid, }) => {
         if (loading) return;
         setLoading(true);
     
-        const docRef = await addDoc(collection(db, "posts",postid,'commnets'), {
+        const docRef = await addDoc(collection(db, "posts",postid,'comments'), {
           userid:userinfo.id ,
           text: input,
           userImg: userinfo.image,
@@ -47,6 +47,8 @@ const CreateComment = ({ postid, }) => {
             });
           });
         }
+
+        setRefresh(!refresh)
     
         setInput("");
         setSelectedFile(null);
