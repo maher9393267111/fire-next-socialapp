@@ -9,7 +9,7 @@ import {
 } from "react-firebase-hooks/firestore";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
-
+import {toast} from "react-toastify";
 import {} from "../../functions/groups";
 import {} from "../../store/reduxglobal";
 import { useDispatch } from "react-redux";
@@ -44,7 +44,7 @@ const {postId} = useSelector(state => state.global);
   const [likes, setLikes] = useState(0);
 
   const [likesdata, setLikesdata] = useState([]);
-
+const [refresh, setRefresh] = useState(false);
 
 
 
@@ -78,7 +78,7 @@ const {postId} = useSelector(state => state.global);
     if (postid) {
       fethPost();
     }
-  }, [db, postid]);
+  }, [db, postid,refresh]);
 
 
 
@@ -92,7 +92,37 @@ if (likesdata) {   // ---->>> importnat to work good
 }
 
 
-    }, [likesdata]);
+    }, [likesdata,refresh]);
+
+
+
+    const likedPost = async () => {
+        try {
+          if (userinfo.name) {
+            if (hasLiked) {
+                setRefresh(!refresh);
+              console.log(post.id, "___post id____");
+              // delete doc from likes if aleready liked
+              await deleteDoc(doc(db, "posts", post.id, "likes", userinfo.id));
+              toast.error("Post unliked");
+            } else {
+                setRefresh(!refresh);
+              console.log(post.id, "___post id____");
+              // add doc to likes if not already liked
+              await setDoc(doc(db, "posts", post.id, "likes", userinfo.id), {
+                username: userinfo.name,
+              });
+              toast.success("Post liked");
+            }
+          } else {
+            toast.error("Please login to like a post");
+            // router.push("/login");
+          }
+        } catch (error) {
+          toast.error(error.message);
+        }
+      };
+    
 
 
 
@@ -206,7 +236,10 @@ if (likesdata) {   // ---->>> importnat to work good
 {/* ----if user make like show this---- */}
  {hasLiked &&  
 <div>
-    <img  className="w-10 rounded-full h-10" src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png" alt="" />
+    <img 
+    onClick={likedPost }
+    
+    className="w-10 rounded-full h-10" src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png" alt="" />
 </div>
  } 
 
@@ -217,7 +250,9 @@ if (likesdata) {   // ---->>> importnat to work good
   {!hasLiked &&  
 
  <div>
-    <img  className="w-10 rounded-full h-10" src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png" alt="" />
+    <img 
+    onClick={likedPost }
+    className="w-10 rounded-full h-10" src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png" alt="" />
 </div> 
 
     }
