@@ -42,12 +42,7 @@ const dispatch = useDispatch();
   const [postLikes, loading] = useCollectionData(q,  { idField: "id" });
 
 
-useEffect(() => {
 
-
-
-
-}, [db,post.likes]);
   
 
   

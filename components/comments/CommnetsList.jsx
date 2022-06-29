@@ -1,7 +1,7 @@
 import { comment } from 'postcss';
 import React from 'react';;
 import CommentCard from './commentCard';
-const CommnetsList = ({comments,userinfo}) => {
+const CommnetsList = ({comments,userinfo,postid}) => {
     return (
         <div>
 
@@ -12,7 +12,7 @@ const CommnetsList = ({comments,userinfo}) => {
 {comments?.map((comment) => (
 <div className='ml-2 mr-2 min-h-[120px] border-t-2 border-b-2'>
 
-<CommentCard comment={comment} userinfo={userinfo} />
+<CommentCard postid={postid} comment={comment} userinfo={userinfo} />
 
    
 </div>

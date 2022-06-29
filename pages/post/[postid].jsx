@@ -298,7 +298,7 @@ const Post = () => {
                       {/* ---Commnets start--- */}
 
                       <div>
-                        <CommentsList userinfo={userinfo} comments={comments} />
+                        <CommentsList postid={postid} userinfo={userinfo} comments={comments} />
                       </div>
                     </div>
                   </div>

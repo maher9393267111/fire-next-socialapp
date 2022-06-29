@@ -1,11 +1,100 @@
 import React from "react";
 import { useState,useEffect } from "react";
 import Moment from 'react-moment'
-const CommentCard = ({ comment,userinfo }) => {
+
+import { useRouter } from "next/router";
+import Link from "next/link";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  onSnapshot,
+  setDoc,
+  query,
+  orderBy,
+  getDoc,
+  arrayRemove,
+  serverTimestamp,
+} from "firebase/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
+import { deleteObject, ref } from "firebase/storage";
+import { toast } from "react-toastify";
+import { db, storage } from "../../firebase";
+
+
+const CommentCard = ({ comment,userinfo,postid }) => {
+
+//console.log('postid ⚛️⚛️⚛️',postid);
 
     const [hasLiked, setHasLiked] = useState(false);
+
+    const q = query(
+      collection(db, "posts", postid, "comments", comment.id, "comlikes")
+      // orderBy("timestamp")
+    );
+  
+  
+    const [commentLikes, loading] = useCollectionData(q,  { idField: "id" });
+
+console.log('commentLikes ⚛️⚛️⚛️',commentLikes);
+
+
+    useEffect(() => {
+      // like.id is doc from likes collection  and compare it with current user's id
+  
+      if (commentLikes) {   // ---->>> importnat to work good
+        setHasLiked(
+          commentLikes.findIndex((like) => like.useremail === userinfo.email) !== -1
+        );
+        console.log("commnet has liked---->", hasLiked);
+      }
+    }, [commentLikes]);
+
+
+
+
+
+    const likedPost = async () => {
+      try {
+        if (userinfo.name) {
+          if (hasLiked) {
+            console.log(postid, "___post id Delete____");
+            // delete doc from likes if aleready liked
+            await deleteDoc(doc(db, "posts", postid, "comments", comment.id,'comlikes',userinfo.id));
+            toast.error("Post unliked");
+          } else {
+            console.log(postid, "___post id Add____");
+            // add doc to likes if not already liked
+            await setDoc(doc(db, "posts", postid, "comments",comment.id,'comlikes', userinfo.id), {
+              username: userinfo.name,
+              timestamp: serverTimestamp(),
+              userimage: userinfo.image,
+              useremail: userinfo.email,
+              userid: userinfo.id,
+
+            });
+            toast.success("Post liked");
+          }
+        } else {
+          toast.error("Please login to like a post");
+          // router.push("/login");
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+
+
+
+
+
+    
   return (
     <div>
+      {hasLiked? (<p>liked</p>) : (<p>no liked</p>)}
       <div className=" mt-2 mb-4">
         {/* ---flex -- */}
 
@@ -78,7 +167,7 @@ const CommentCard = ({ comment,userinfo }) => {
                         {hasLiked && (
                           <div>
                             <img
-                           //   onClick={likedPost}
+                              onClick={likedPost}
                               className="w-[14px] h-[14px] rounded-full "
                               src="https://cdn3.iconfinder.com/data/icons/object-emoji/50/Heart-256.png"
                               alt=""
@@ -90,7 +179,7 @@ const CommentCard = ({ comment,userinfo }) => {
 
                         {!hasLiked && (
                           <img
-                          //  onClick={likedPost}
+                            onClick={likedPost}
                             className="w-8 rounded-full h-8"
                             src="https://cdn1.iconfinder.com/data/icons/modern-universal/32/icon-19-512.png"
                             alt=""
