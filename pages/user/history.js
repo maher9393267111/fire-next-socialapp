@@ -34,21 +34,37 @@ console.log("----💎💎💎---->",);
         collection(db, "Users", userinfo.id, "userGroups"),
      //   orderBy("timestamp", "desc")
       );
-      let commentsArray = [];
+      let groupsArray = [];
   
     onSnapshot(q, (QuerySnapshot) => {
        
         QuerySnapshot.forEach((doc) => {
-          commentsArray.push({ ...doc.data(), id: doc.id });
-          console.log("groups array--->",commentsArray);
-          setUsergroups(commentsArray);
+            groupsArray.push({ ...doc.data(), id: doc.id });
+          console.log("Groups array☢️☢️☢️--->", groupsArray );
+          setUsergroups( groupsArray );
         });
       });
 
    
 
+// fetch user posts from posts collection
 
 
+
+const q2 = query(
+    collection(db, "posts"),
+    orderBy("timestamp", "desc"),
+    where("userid", "==", userinfo.id) 
+  );
+
+  const unsub = onSnapshot(q2, (QuerySnapshot) => {
+    let postsArray = [];
+    QuerySnapshot.forEach((doc) => {
+        postsArray.push({ ...doc.data(), id: doc.id });
+        console.log("Posts array☢️☢️☢️--->", postsArray );
+      setUserposts(postsArray);
+    });
+  });
 
 
   
@@ -78,6 +94,7 @@ console.log("userinfo-------->");
         <div>
             History {userinfo.name}
     {usergroups?.length}
+    {userposts?.length}
         </div>
     );
 }
