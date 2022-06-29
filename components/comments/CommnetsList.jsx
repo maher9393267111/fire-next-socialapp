@@ -10,7 +10,7 @@ const CommnetsList = ({comments,userinfo,postid}) => {
 <div>
 
 {comments?.map((comment) => (
-<div className='ml-2 mr-2 min-h-[120px] border-t-2 border-b-2'>
+<div key={comment.id} className='ml-2 mr-2 min-h-[120px] border-t-2 border-b-2'>
 
 <CommentCard postid={postid} comment={comment} userinfo={userinfo} />
 
